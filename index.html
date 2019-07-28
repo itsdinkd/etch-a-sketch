@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Etch-A-Sketch | TheOdinProject</title>
+    <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+</head>
+<body>
+">
+        <h1 class="item-1">Etch</h1>
+        <h1 class="item-2">A</h1>
+        <h1 class="item-3">Sketch</h1>
+        <div id="grid-control">
+            <div id="color" class="grid-row">
+                <label for="colorSelect">Color</label>
+                <input type="color" id="colorSelect" label="yee">
+            </div>
+
+            <div id="btn" class="grid-row">
+                <button class="btn erase-block">Eraser</button>
+            </div>
+
+            <div id="btn" class="grid-row">
+                <button class="btn reset-grid">Reset Sketch</button>
+            </div>
+
+            <div id="btn" class="grid-row">
+                <button class="btn resize-grid">Resize Grid</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<footer>
+    <script>
+    const container = document.getElementById('container');
+    const gridReset = document.querySelector('.reset-grid');
+    const gridResize = document.querySelector('.resize-grid');
+    const eraseBlock = document.querySelector('.erase-block');
+
+    let defaultColor = '#222222';
+    let colorSelect;
+    let colorTicker;
+    let gridSize;
+    let gridPrompt;
+
+
+    window.addEventListener('load', startup, false);
+    gridReset.addEventListener('click', resetGrid);
+    gridResize.addEventListener('click', resizeGrid);
+    eraseBlock.addEventListener('click', eraser);
+
+    function createGrid(size, side) {
+        clearGrid();
+        const grid = document.createElement('div');
+        grid.className = 'grid';
+        grid.setAttribute('id', 'grid');
+        container.appendChild(grid);
+        grid.style.setProperty('--side', side);
+        let int = size ** 2;
+        for (let i = 0; i < int; i++) {
+            let block = document.createElement('div');
+            block.className = 'grid-item';
+            grid.appendChild(block);
+            block.addEventListener("mouseenter", (e) => mouseOver(e))
+        }
+    }
+
+    function resizeGrid() {
+        gridPrompt = prompt('Please choose a number higher than 0 for new grid size', 'Default is 16')
+        while (gridPrompt < 1) {
+            gridPrompt = prompt('You must enter a number higher than 0')
+        }
+        createGrid(gridPrompt, gridPrompt);
+    }
+
+    function clearGrid() {
+        const gridBlock = document.getElementsByClassName('grid-item');
+        const oldGrid = document.querySelector('.grid');
+        if (gridBlock.length > 1) {
+            container.removeChild(oldGrid);
+        }
+    }
+
+    function resetGrid() {
+        if (gridPrompt === undefined) {
+            return createGrid(16,16);
+        }
+        else return createGrid(gridPrompt, gridPrompt)
+    }
+
+    function eraser() {
+        colorTicker = 1;
+        colorSelect = '#c3c3c3'
+    }
+
+    function mouseOver(e) {
+        if (colorTicker === 1) {
+            e.target.style.backgroundColor = colorSelect;
+        } else e.target.style.backgroundColor = 'rgba(60,60,60)';
+    }
+
+    function startup() {
+        colorSelect = document.querySelector("#colorSelect");
+        colorSelect.value = defaultColor;
+        colorSelect.addEventListener("input", updateColor, false);
+        colorSelect.addEventListener("change", changeBackground, false);
+    }
+
+    function updateColor(event) {
+        colorTicker = 1;
+        colorSelect = event.target.value;
+        let bodyColor = document.querySelector('body');
+        bodyColor.style.backgroundColor = event.target.value;
+
+    }
+
+    function changeBackground(event) {
+        let bodyColor = document.querySelector('body');
+        bodyColor.style.backgroundColor = event.target.value;
+    }
+
+    createGrid(16,16)
+            </script>
+
+</footer>
+</html>
